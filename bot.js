@@ -15,7 +15,7 @@ const bot = mineflayer.createBot({
   username: 'Rhish'
 })
 
-const RANGE_GOAL = 1 // get within this radius of the player
+const RANGE_GOAL = 1 
 
 bot.loadPlugin(pathfinder)
 
@@ -24,7 +24,7 @@ bot.once('spawn', () => {
 
   bot.on('chat', (username, message) => {
     if (username === bot.username) return
-    if (message !== 'come') return
+    if (!message.includes('come')) return
     const target = bot.players[username]?.entity
     if (!target) {
       bot.chat("I don't see you !")
@@ -39,10 +39,11 @@ bot.once('spawn', () => {
 
 bot.on('chat', async (username, message) => {
   if (username === bot.username) return
-  if (message.includes('/')) return
+  if (message.includes('set')) return
+  if (message.includes('clear')) return
   if (message!=='come'){
     const result = await model.invoke([
-    ["system", "You are a minecraft bot. you are currently playing inside a minecraft world as a player named 'Rhishh'. Answer very shortly and keep it simple "],
+    ["system", "You are a minecraft bot. you are currently playing inside a minecraft world. Answer very shortly and keep it simple. Not multiple lines. and dont talk like a bot , pretend to be just a player "],
     ["human", message]
     ]);
     bot.chat(result.content)
