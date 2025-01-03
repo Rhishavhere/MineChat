@@ -1,8 +1,12 @@
-// This is an example that uses mineflayer-pathfinder to showcase how simple it is to walk to goals
+const { ChatOllama } = require("@langchain/ollama");
+
+
+const model = new ChatOllama({
+  model: "llama3.2:1b",  
+});
 
 const mineflayer = require('mineflayer')
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder')
-
 
 
 const bot = mineflayer.createBot({
@@ -33,8 +37,14 @@ bot.once('spawn', () => {
   })
 })
 
-bot.on('chat', (username, message) => {
+bot.on('chat', async (username, message) => {
   if (username === bot.username) return
-  if(message =="hello")
-    bot.chat("meow meow")
+  if (message.includes('/')) return
+  if (message!=='come'){
+    const result = await model.invoke([
+    ["system", "You are a minecraft bot. you are currently playing inside a minecraft world as a player named 'Rhishh'. Answer very shortly and keep it simple "],
+    ["human", message]
+    ]);
+    bot.chat(result.content)
+  }
 })
